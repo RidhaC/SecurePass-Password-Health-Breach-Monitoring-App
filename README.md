@@ -69,11 +69,5 @@ Then open [http://localhost:8000](http://localhost:8000) in your browser.
 
 - Add subdomain scanner module  
 - Deploy to GitHub Pages or Render  
-- Add password entropy calculation  
 - Unit tests for backend utils
 
----
-
-## 📄 License
-
-MIT License
