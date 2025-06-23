@@ -1,11 +1,54 @@
 <!DOCTYPE html>
-<html>
-<head><title>SecurePass Checker</title><link rel="stylesheet" href="styles.css"></head>
-<body>
-    <h1>Password Strength & Breach Checker</h1>
-    <input type="password" id="password" placeholder="Enter your password">
-    <button onclick="checkPassword()">Check</button>
-    <p id="result"></p>
-    <script src="script.js"></script>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SecurePass Checker</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
+  <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl w-full max-w-md text-center">
+    <h1 class="text-3xl font-bold mb-6">Password Strength & Breach Checker</h1>
+    <div class="relative w-full">
+      <input id="password" type="password" placeholder="Enter your password" class="w-full p-3 pr-10 rounded-xl bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <button id="toggleBtn" class="absolute right-2 top-2.5 text-sm text-blue-400 hover:underline">Show</button>
+    </div>
+    <button onclick="checkPassword()" class="mt-4 w-full p-3 bg-blue-600 rounded-xl hover:bg-blue-500 font-semibold">Check</button>
+    <p id="result" class="mt-4 text-lg font-medium"></p>
+
+    <div id="strength-bar" class="w-full h-3 bg-gray-600 rounded-xl mt-2 overflow-hidden">
+      <div id="strength-fill" class="h-full w-0 rounded-xl transition-all duration-300"></div>
+    </div>
+  </div>
+
+  <script>
+    const passwordInput = document.getElementById("password");
+    const toggleBtn = document.getElementById("toggleBtn");
+
+    toggleBtn.addEventListener("click", () => {
+      const isHidden = passwordInput.getAttribute("type") === "password";
+      passwordInput.setAttribute("type", isHidden ? "text" : "password");
+      toggleBtn.textContent = isHidden ? "Hide" : "Show";
+    });
+
+    async function checkPassword() {
+      const password = passwordInput.value;
+      const res = await fetch("http://localhost:5000/check", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+
+      const data = await res.json();
+      const messages = ["Very Weak", "Weak", "Moderate", "Strong", "Very Strong"];
+      const colors = ["bg-red-500", "bg-yellow-500", "bg-yellow-300", "bg-green-500", "bg-blue-500"];
+      const widths = ["w-1/5", "w-2/5", "w-3/5", "w-4/5", "w-full"];
+
+      document.getElementById("result").innerText = `Score: ${messages[data.score]}, Breached: ${data.breached ? "Yes" : "No"}`;
+
+      const bar = document.getElementById("strength-fill");
+      bar.className = `h-full rounded-xl transition-all duration-300 ${colors[data.score]} ${widths[data.score]}`;
+    }
+  </script>
 </body>
 </html>

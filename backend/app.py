@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS  # ✅ Add this
 from utils import password_score, check_breach
 
 app = Flask(__name__)
+CORS(app)  # ✅ Add this
 
 @app.route("/check", methods=["POST"])
 def check_password():
