@@ -53,9 +53,6 @@ python -m http.server 8000
 
 Then open [http://localhost:8000](http://localhost:8000) in your browser.
 
-### ✅ OR: Use the `.bat` Launcher
-
-Just double-click `start_securepass.bat` from the root folder.
 
 ---
 
